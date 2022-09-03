@@ -8,7 +8,7 @@ Spring Boot とReactのデモアプリケーション
 - CheckStyle: 9.0
 - Node.js: 18.8.0
 
-## How does it work
+## Getting started
 
 ```shell
 cd src/main/js

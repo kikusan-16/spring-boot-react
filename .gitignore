@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### my app ###
-public
+src/main/resources/public
