@@ -6,8 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    /**
+     * アプリケーション起動
+     * @param args 実行引数
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
 }
