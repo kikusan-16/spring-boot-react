@@ -13,5 +13,7 @@ Spring Boot とReactのデモアプリケーション
 ```shell
 cd src/main/js
 npm install
-npm build
+cd ../../..
+./gradlew bootRun
 ```
+
