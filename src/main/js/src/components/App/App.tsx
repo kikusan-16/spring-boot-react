@@ -7,7 +7,7 @@ import {
 import Header from '../Header/Header';
 import Home from '../Home/Home';
 import Main from '../Main/Main';
-import Cruds from '../Cruds/Cruds';
+import Kanban from '../Cruds/Kanban';
 import { sectionContents } from '../../utils/constants';
 
 const App = () => {
@@ -18,7 +18,7 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/crud' element={
             <Main section={ sectionContents[0] }>
-              <Cruds />
+              <Kanban />
             </Main>
           } />
           <Route path='*'

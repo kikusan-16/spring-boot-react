@@ -45,3 +45,18 @@ export const sectionContents: SectionProps[] = [
   }
 ];
 Object.freeze(sectionContents);
+
+export const KanbanDivisionType = {
+  todo: 'kanban/todo',
+  doing: 'kanban/doing',
+  done: 'kanban/done'
+} as const;
+
+export const KanbanDivisionColor = {
+  none: 'border',
+  todo: 'border-danger',
+  doing: 'border-warning',
+  done: 'border-success'
+} as const;
+
+export const baseUrl: string = 'http://localhost:8080';
