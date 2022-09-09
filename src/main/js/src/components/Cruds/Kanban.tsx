@@ -1,65 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { CardAttr, CardOrder, ColumnAttr } from '../../utils/types';
-import fetchAny from '../../services/fetcher';
+import { StickyNoteAttr, NodeLink, ColumnAttr } from '../../utils/types';
+import fetchAny, { postAny } from '../../services/fetcher';
 import { getReorderPatch, sortBy } from '../../services/kanbanService';
 import Loading from './Loading';
 import Column from './Column';
 
-const fetchColumns = async (): Promise<ColumnAttr[]> => {
+const getColumns = async (): Promise<ColumnAttr[]> => {
   return await fetchAny('/api/kanban');
 };
 
-const fetchOrders = async (): Promise<CardOrder[]> => {
-  return await fetchAny('/api/descendants');
+const getNodes = async (): Promise<NodeLink[]> => {
+  return await fetchAny('/api/nodes');
 };
 
-const fetchStickyNotes = async (): Promise<CardOrder[]> => {
+const getStickyNotes = async (): Promise<NodeLink[]> => {
   return await fetchAny('/api/stickynotes');
+};
+
+const postNodes = async (patch: NodeLink[]) => {
+  return await postAny('/api/nodes', JSON.stringify(patch));
 };
 
 const Kanban = () => {
   const [columns, setColumns] = useState<ColumnAttr[]>([]);
-  const [orders, setOrders] = useState<CardOrder[]>([]);
-  const [stickyNotes, setStickyNotes] = useState<CardAttr[]>([]);
+  const [nodes, setNodes] = useState<NodeLink[]>([]);
+  const [stickyNotes, setStickyNotes] = useState<StickyNoteAttr[]>([]);
 
   useEffect(() => {
     const load = async () => {
-      const [columns, orders, stickyNotes] = await Promise.all([
-        fetchColumns(),
-        fetchOrders(),
-        fetchStickyNotes()
+      const [columns, nodes, stickyNotes] = await Promise.all([
+        getColumns(),
+        getNodes(),
+        getStickyNotes()
       ]);
-      const newState = sortBy(columns, stickyNotes, orders);
+      const newState = sortBy(columns, stickyNotes, nodes);
       setColumns(newState.columns);
-      setOrders(newState.orders);
+      setNodes(newState.nodes);
       setStickyNotes(newState.stickyNotes);
     };
     void load(); // 返ってくるPromiseを無視する
   }, []);
 
-  const [draggingCardID, setDraggingCardID] = useState<string | null>(null);
+  const [draggingStickyNoteID, setDraggingStickyNoteID] = useState<string | null>(null);
 
-  const dropCardTo = (toID: string) => {
-    const fromID = draggingCardID;
+  const dropStickyNoteTo = (toID: string) => {
+    const fromID = draggingStickyNoteID;
     if (!fromID) return;
 
-    setDraggingCardID(null);
+    setDraggingStickyNoteID(null);
 
     if (fromID === toID) return;
 
-    const patch = getReorderPatch(orders, fromID, toID);
+    const patch = getReorderPatch(nodes, fromID, toID);
 
-    const newState = sortBy(columns, stickyNotes, orders, patch);
+    const newState = sortBy(columns, stickyNotes, nodes, patch);
 
     setColumns(newState.columns);
-    setOrders(newState.orders);
+    setNodes(newState.nodes);
+    setStickyNotes(newState.stickyNotes);
 
     const load = async () => {
-      await fetchAny('/api/descendants', {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(patch)
-      });
+      await postNodes(patch);
     };
     void load(); // 返ってくるPromiseを無視する
   };
@@ -68,14 +69,14 @@ const Kanban = () => {
     <div className='row'>
           {!columns
             ? <Loading />
-            : (columns.map(({ id: columnID, title, type, cards }) => (
+            : (columns.map(({ id: columnID, title, type, stickyNotes }) => (
               <Column
                 type={type}
                 key={columnID}
                 title={title}
-                cards={cards}
-                onCardDragStart={(cardID: React.SetStateAction<string | null>) => setDraggingCardID(cardID)}
-                onCardDrop={(entered: any) => dropCardTo(entered ?? columnID)}
+                stickyNotes={stickyNotes}
+                onStickyNoteDragStart={(stickyNoteID: React.SetStateAction<string | null>) => setDraggingStickyNoteID(stickyNoteID)}
+                onStickyNoteDrop={(entered: any) => dropStickyNoteTo(entered ?? columnID)}
               />
               )))
           }

@@ -1,18 +1,13 @@
-package work.sehippocampus.app.domain.kanban.entity;
+package work.sehippocampus.app.domain.kanban.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DescendantEntity {
-    @Id
+public class NodeLinkForm {
     private String id;
     private String next;
 }

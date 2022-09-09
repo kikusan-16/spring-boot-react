@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Badge } from 'react-bootstrap';
 import { KanbanDivisionColor, KanbanDivisionType } from '../../utils/constants';
-import { CardAttr, KanbanTypes } from '../../utils/types';
+import { StickyNoteAttr, KanbanTypes } from '../../utils/types';
 import Loading from './Loading';
 import StickyNote from './StickyNote';
 
@@ -22,17 +22,17 @@ const toColorFromType = (type: KanbanTypes | undefined) => {
 const Column = (props: {
   type?: KanbanTypes
   title?: string
-  cards?: CardAttr[]
-  onCardDragStart?: (id: string) => void
-  onCardDrop?: (entered: string | null) => void
+  stickyNotes?: StickyNoteAttr[]
+  onStickyNoteDragStart?: (id: string) => void
+  onStickyNoteDrop?: (entered: string | null) => void
 }) => {
-  const { type, title, cards, onCardDragStart, onCardDrop } = props;
-  const totalCount = cards?.length ?? -1;
+  const { type, title, stickyNotes, onStickyNoteDragStart, onStickyNoteDrop } = props;
+  const totalCount = stickyNotes?.length ?? -1;
 
-  const [draggingCardID, setDraggingCardID] = useState<string | undefined>(undefined);
-  const handleCardDragStart = (id: string) => {
-    setDraggingCardID(id);
-    onCardDragStart?.(id);
+  const [draggingStickyNoteID, setDraggingStickyNoteID] = useState<string | undefined>(undefined);
+  const handleStickyNoteDragStart = (id: string) => {
+    setDraggingStickyNoteID(id);
+    onStickyNoteDragStart?.(id);
   };
 
   return (
@@ -42,23 +42,23 @@ const Column = (props: {
         <h3>{title}</h3>
       </div>
 
-      {!cards
+      {!stickyNotes
         ? (<Loading />)
         : (
         <>
-            {cards.map(({ id, text }, i) => (
+            {stickyNotes.map(({ id, text }, i) => (
               <StickyNote.DropArea
                 key={id}
                 disabled={
-                  draggingCardID !== undefined &&
-                  (id === draggingCardID || cards[i - 1]?.id === draggingCardID)
+                  draggingStickyNoteID !== undefined &&
+                  (id === draggingStickyNoteID || stickyNotes[i - 1]?.id === draggingStickyNoteID)
                 }
-                onDrop={() => onCardDrop?.(id)}
+                onDrop={() => onStickyNoteDrop?.(id)}
               >
                 <StickyNote
                   text={text}
-                  onDragStart={() => handleCardDragStart(id)}
-                  onDragEnd={() => setDraggingCardID(undefined)}
+                  onDragStart={() => handleStickyNoteDragStart(id)}
+                  onDragEnd={() => setDraggingStickyNoteID(undefined)}
                 />
               </StickyNote.DropArea>
             ))}
@@ -66,10 +66,10 @@ const Column = (props: {
             <StickyNote.DropArea
               style={{ height: '100%' }}
               disabled={
-                draggingCardID !== undefined &&
-                  cards[cards.length - 1]?.id === draggingCardID
+                draggingStickyNoteID !== undefined &&
+                  stickyNotes[stickyNotes.length - 1]?.id === draggingStickyNoteID
               }
-              onDrop={() => onCardDrop?.(null)}
+              onDrop={() => onStickyNoteDrop?.(null)}
             />
         </>
           )}

@@ -38,4 +38,15 @@ const fetchAny = async <T = any>(
   }
 };
 
+export const postAny = async (
+  input: RequestInfo,
+  data: BodyInit | null
+) => {
+  return await fetchAny(input, {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: data
+  });
+};
+
 export default fetchAny;

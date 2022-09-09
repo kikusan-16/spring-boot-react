@@ -21,17 +21,17 @@ export type KanbanColors = ValueOf<typeof KanbanDivisionColor>;
 export interface ColumnAttr {
   id: string
   title: string
-  order: number
+  lineNumber: number
   type: KanbanTypes
-  cards: CardAttr[]
+  stickyNotes: StickyNoteAttr[]
 }
 
-export interface CardAttr {
+export interface StickyNoteAttr {
   id: string
   text?: string
 }
 
-export interface CardOrder {
+export interface NodeLink {
   id: string
   next: string | null
 }
