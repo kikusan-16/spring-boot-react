@@ -15,13 +15,13 @@ import java.util.List;
 public class DescendantController {
     private final DescendantService descendantService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<DescendantEntity> getAll() {
         return descendantService.getDescendants();
     }
 
-    @PostMapping("/")
-    public List<DescendantEntity> upsert(List<DescendantForm> forms) {
+    @PostMapping
+    public List<DescendantEntity> upsert(@RequestBody List<DescendantForm> forms) {
         return descendantService.upsertDescendants(forms);
     }
 }

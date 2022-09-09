@@ -16,13 +16,13 @@ public class StickyNoteController {
 
     private final StickyNoteService stickyNoteService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<StickyNoteEntity> getAll() {
         return stickyNoteService.getStickyNotes();
     }
 
-    @PostMapping("/")
-    public StickyNoteEntity upsert(StickyNoteForm form) {
+    @PostMapping
+    public StickyNoteEntity upsert(@RequestBody StickyNoteForm form) {
         return stickyNoteService.upsertStickyNote(form);
     }
 }

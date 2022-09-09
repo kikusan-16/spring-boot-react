@@ -15,13 +15,13 @@ import java.util.List;
 public class KanbanController {
     private final KanbanService kanbanService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<KanbanEntity> getAll() {
         return kanbanService.getKanban();
     }
 
-    @PostMapping("/")
-    public KanbanEntity upsert(KanbanForm form) {
+    @PostMapping
+    public KanbanEntity upsert(@RequestBody KanbanForm form) {
         return kanbanService.upsertKanban(form);
     }
 }
