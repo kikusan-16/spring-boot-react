@@ -55,21 +55,22 @@ export const getReorderPatch = (
   if (fromID === toID) {
     return patch;
   }
-  const newNodes = nodes.slice();
-  const fromNode = nodes.find(node => node.id === fromID) as NodeLink;
+  const tmpNodes = nodes.slice();
+  const fromNode = tmpNodes.find(node => node.id === fromID) as NodeLink;
 
   // 元カードの削除
-  const oldParentNode = newNodes.find(node => node.next === fromID) as NodeLink;
-  patch.push({ id: oldParentNode.id, next: fromNode.next });
+  const oldParentNode = tmpNodes.find(node => node.next === fromID) as NodeLink;
+  oldParentNode.next = fromNode.next;
+  patch.push(oldParentNode);
 
   // columnが移動先の場合
-  if (!newNodes.find(node => node.next === toID)) {
-    const lastNode = getLastNode(newNodes, toID);
+  if (!tmpNodes.find(node => node.next === toID)) {
+    const lastNode = getLastNode(tmpNodes, toID);
     patch.push({ id: lastNode.id, next: fromID });
     patch.push({ id: fromNode.id, next: null });
   // stickyNoteが移動先の場合
   } else {
-    const newParentNode = newNodes.find(node => node.next === toID) as NodeLink;
+    const newParentNode = tmpNodes.find(node => node.next === toID) as NodeLink;
     patch.push({ id: newParentNode.id, next: fromNode.id });
     patch.push({ id: fromNode.id, next: toID });
   }
