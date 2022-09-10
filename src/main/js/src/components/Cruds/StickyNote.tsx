@@ -1,17 +1,41 @@
 import React, { useState, useRef } from 'react';
+import ContentEditable from 'react-contenteditable';
+
+const Editable = (props: {
+  id: string
+  text: string
+  onTextChange?: (stickyNoteID: string, text: string) => void
+}) => {
+  const { id, text, onTextChange } = props;
+  const value = useRef(text);
+
+  const handleChange = (evt: any) => {
+    value.current = evt.target.value;
+    onTextChange?.(id, value.current);
+  };
+
+  return <ContentEditable
+    style={{ outline: 'none' }}
+    suppressContentEditableWarning={true}
+    className='card-text ps-1'
+    html={value.current}
+    onChange={handleChange} />;
+};
 
 const StickyNote = (props: {
+  id: string
   text?: string
   onDragStart?: () => void
   onDragEnd?: () => void
+  onTextChange?: (stickyNoteID: string, text: string) => void
 }) => {
-  const { text, onDragStart, onDragEnd } = props;
+  const { id, text, onDragStart, onDragEnd, onTextChange } = props;
   const [drag, setDrag] = useState(false);
 
   return (
     <div
       draggable
-      className='card mb-3 border'
+      className='card p-1 border'
       style={{ opacity: drag ? 0.5 : undefined }}
       onDragStart={() => {
         onDragStart?.();
@@ -21,89 +45,36 @@ const StickyNote = (props: {
         onDragEnd?.();
         setDrag(false);
       }}>
-      <div className="card-body">
-        <p className="card-text">
-          {text}
-        </p>
-      </div>
+      <Editable
+        id={id}
+        text={text ?? ''}
+        onTextChange={onTextChange}
+        />
     </div>
   );
 };
 
 const DropArea = (props: {
-  disabled?: boolean
   onDrop?: () => void
   children?: React.ReactNode
   className?: string
   style?: React.CSSProperties
 }) => {
-  const { disabled, onDrop, children, className, style } = props;
-  const [isTarget, setIsTarget] = useState(false);
-  const visible = !disabled && isTarget;
-
-  const [dragOver, onDragOver] = useDragAutoLeave();
+  const { onDrop, children, className } = props;
 
   return (
     <div
-      style={style}
       className={className}
       onDragOver={(ev: React.DragEvent<HTMLDivElement>) => {
-        if (disabled) return;
-
         ev.preventDefault();
-        onDragOver(() => setIsTarget(false));
-      }}
-      onDragEnter={() => {
-        if (disabled ?? dragOver.current) return;
-
-        setIsTarget(true);
       }}
       onDrop={() => {
-        if (disabled) return;
-
-        setIsTarget(false);
         onDrop?.();
       }}
     >
-      <div
-        style={{
-          height: !visible ? 0 : undefined,
-          borderWidth: !visible ? 0 : undefined
-        }}
-      />
-
       {children}
     </div>
   );
-};
-
-/**
- * dragOver イベントが継続中かどうかのフラグを ref として返す
- *
- * timeout 経過後に自動でフラグが false になる
- *
- * @param timeout 自動でフラグを false にするまでの時間 (ms)
- */
-const useDragAutoLeave = (timeout: number = 100) => {
-  const dragOver = useRef(false);
-  const timer = useRef(0);
-
-  return [
-    dragOver,
-
-    /**
-     * @param onDragLeave フラグが false になるときに呼ぶコールバック
-     */
-    (onDragLeave?: () => void) => {
-      clearTimeout(timer.current);
-
-      dragOver.current = true;
-      timer.current = window.setTimeout(() => {
-        dragOver.current = false;
-        onDragLeave?.();
-      }, timeout);
-    }
-  ] as const;
 };
 
 StickyNote.DropArea = DropArea;

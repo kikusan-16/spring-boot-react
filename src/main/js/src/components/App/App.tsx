@@ -13,22 +13,22 @@ import { sectionContents } from '../../utils/constants';
 const App = () => {
   return (
     <BrowserRouter>
-      <Header />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/crud' element={
-            <Main section={ sectionContents[0] }>
-              <Kanban />
-            </Main>
-          } />
-          <Route path='*'
-            element={
-              <main className='container'>
-                <p>There&apos;s nothing here!</p>
-              </main>
-          } />
-        </Routes>
-      </BrowserRouter>
+    <Header />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/crud' element={
+          <Main section={ sectionContents[0] }>
+            <Kanban />
+          </Main>
+        } />
+        <Route path='*'
+          element={
+            <main className='container'>
+              <p>There&apos;s nothing here!</p>
+            </main>
+        } />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

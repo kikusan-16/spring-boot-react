@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StickyNoteAttr, NodeLink, ColumnAttr } from '../../utils/types';
 import fetchAny, { postAny } from '../../services/fetcher';
-import { getReorderPatch, sortBy } from '../../services/kanbanService';
+import { getAddPatch, getReorderPatch, sortBy } from '../../services/kanbanService';
 import Loading from './Loading';
 import Column from './Column';
 
@@ -19,6 +19,14 @@ const getStickyNotes = async (): Promise<NodeLink[]> => {
 
 const postNodes = async (patch: NodeLink[]) => {
   return await postAny('/api/nodes', JSON.stringify(patch));
+};
+
+const postStickyNote = async (stickyNote?: StickyNoteAttr): Promise<StickyNoteAttr> => {
+  if (stickyNote) {
+    return await postAny('/api/stickynotes', JSON.stringify(stickyNote));
+  } else {
+    return await postAny('/api/stickynotes');
+  }
 };
 
 const Kanban = () => {
@@ -62,7 +70,40 @@ const Kanban = () => {
     const load = async () => {
       await postNodes(patch);
     };
-    void load(); // 返ってくるPromiseを無視する
+    void load();
+  };
+
+  const addStickyNote = (columnID: string) => {
+    const column = columns?.find(col => col.id === columnID);
+    if (!column) return;
+
+    const load = async () => {
+      const newStickyNote = await postStickyNote();
+
+      let patch: NodeLink[] = [];
+      patch = getAddPatch(nodes, columnID, newStickyNote.id);
+      stickyNotes.push(newStickyNote);
+      const newState = sortBy(columns, stickyNotes, nodes, patch);
+
+      setColumns(newState.columns);
+      setNodes(newState.nodes);
+      setStickyNotes(newState.stickyNotes);
+      await postNodes(patch);
+    };
+    void load();
+  };
+
+  const updateStickyNote = (stickyNoteID: string, text: string) => {
+    const stickyNote = stickyNotes.find(stickyNote => stickyNote.id === stickyNoteID);
+    if (!stickyNote) return;
+
+    stickyNote.text = text;
+    setStickyNotes(stickyNotes);
+
+    const load = async () => {
+      await postStickyNote({ id: stickyNoteID, text });
+    };
+    void load();
   };
 
   return (
@@ -77,6 +118,8 @@ const Kanban = () => {
                 stickyNotes={stickyNotes}
                 onStickyNoteDragStart={(stickyNoteID: React.SetStateAction<string | null>) => setDraggingStickyNoteID(stickyNoteID)}
                 onStickyNoteDrop={(entered: any) => dropStickyNoteTo(entered ?? columnID)}
+                onStickyNoteChange={updateStickyNote}
+                onAddClick={() => addStickyNote(columnID)}
               />
               )))
           }

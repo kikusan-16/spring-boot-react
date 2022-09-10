@@ -40,7 +40,7 @@ const fetchAny = async <T = any>(
 
 export const postAny = async (
   input: RequestInfo,
-  data: BodyInit | null
+  data?: BodyInit
 ) => {
   return await fetchAny(input, {
     method: 'POST',

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Badge } from 'react-bootstrap';
 import { KanbanDivisionColor, KanbanDivisionType } from '../../utils/constants';
 import { StickyNoteAttr, KanbanTypes } from '../../utils/types';
@@ -25,50 +25,50 @@ const Column = (props: {
   stickyNotes?: StickyNoteAttr[]
   onStickyNoteDragStart?: (id: string) => void
   onStickyNoteDrop?: (entered: string | null) => void
+  onAddClick?: () => void
+  onStickyNoteChange?: (stickyNoteID: string, text: string) => void
 }) => {
-  const { type, title, stickyNotes, onStickyNoteDragStart, onStickyNoteDrop } = props;
+  const { type, title, stickyNotes, onStickyNoteDragStart, onStickyNoteDrop, onAddClick, onStickyNoteChange } = props;
   const totalCount = stickyNotes?.length ?? -1;
 
-  const [draggingStickyNoteID, setDraggingStickyNoteID] = useState<string | undefined>(undefined);
   const handleStickyNoteDragStart = (id: string) => {
-    setDraggingStickyNoteID(id);
     onStickyNoteDragStart?.(id);
+  };
+  const addStickyNote = () => {
+    onAddClick?.();
   };
 
   return (
     <div className={`col p-3 m-2 border ${toColorFromType(type)}`}>
       <div>
         {totalCount >= 0 && <Badge>{totalCount}</Badge>}
-        <h3>{title}</h3>
+        <div className='row'>
+          <h3 className='col'>{title}</h3>
+          <div className='col text-end'><i onClick={addStickyNote} className='plus bi bi-file-earmark-plus'></i></div>
+        </div>
       </div>
 
       {!stickyNotes
         ? (<Loading />)
         : (
         <>
-            {stickyNotes.map(({ id, text }, i) => (
+            {stickyNotes.map(({ id, text }) => (
               <StickyNote.DropArea
+                className='pt-3'
                 key={id}
-                disabled={
-                  draggingStickyNoteID !== undefined &&
-                  (id === draggingStickyNoteID || stickyNotes[i - 1]?.id === draggingStickyNoteID)
-                }
                 onDrop={() => onStickyNoteDrop?.(id)}
               >
                 <StickyNote
+                  id={id}
                   text={text}
                   onDragStart={() => handleStickyNoteDragStart(id)}
-                  onDragEnd={() => setDraggingStickyNoteID(undefined)}
+                  onTextChange={onStickyNoteChange}
                 />
               </StickyNote.DropArea>
             ))}
 
             <StickyNote.DropArea
-              style={{ height: '100%' }}
-              disabled={
-                draggingStickyNoteID !== undefined &&
-                  stickyNotes[stickyNotes.length - 1]?.id === draggingStickyNoteID
-              }
+              className='h-100'
               onDrop={() => onStickyNoteDrop?.(null)}
             />
         </>

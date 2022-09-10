@@ -86,8 +86,12 @@ export const sortBy: {
   (columns: ColumnAttr[], stickyNotes: StickyNoteAttr[], nodes: NodeLink[], patch: NodeLink[]): { columns: ColumnAttr[], stickyNotes: StickyNoteAttr[], nodes: NodeLink[]}
 } = (columns: ColumnAttr[], stickyNotes: StickyNoteAttr[], nodes: NodeLink[], patchs?: NodeLink[]) => {
   patchs?.forEach(patch => {
-    const node = nodes.find(node => patch.id === node.id) as NodeLink;
-    node.next = patch.next;
+    const node = nodes.find(node => patch.id === node.id);
+    if (node) {
+      node.next = patch.next;
+    } else {
+      nodes.push(patch);
+    }
   });
 
   columns = columns.map(col => {
@@ -97,4 +101,17 @@ export const sortBy: {
   });
 
   return { columns, stickyNotes, nodes };
+};
+
+export const getAddPatch = (
+  nodes: NodeLink[],
+  parentID: string,
+  newID: string
+): NodeLink[] => {
+  const patch: NodeLink[] = [];
+  const parentNode = nodes.find(node => node.id === parentID) as NodeLink;
+  patch.push({ id: newID, next: parentNode.next });
+  parentNode.next = newID;
+  patch.push(parentNode);
+  return patch;
 };
