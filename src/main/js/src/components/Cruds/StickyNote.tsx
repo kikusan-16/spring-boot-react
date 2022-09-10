@@ -5,6 +5,7 @@ const Editable = (props: {
   id: string
   text: string
   onTextChange?: (stickyNoteID: string, text: string) => void
+
 }) => {
   const { id, text, onTextChange } = props;
   const value = useRef(text);
@@ -28,14 +29,15 @@ const StickyNote = (props: {
   onDragStart?: () => void
   onDragEnd?: () => void
   onTextChange?: (stickyNoteID: string, text: string) => void
+  onDeleteClick?: (stickyNoteID: string) => void
 }) => {
-  const { id, text, onDragStart, onDragEnd, onTextChange } = props;
+  const { id, text, onDragStart, onDragEnd, onTextChange, onDeleteClick } = props;
   const [drag, setDrag] = useState(false);
 
   return (
     <div
       draggable
-      className='card p-1 border'
+      className='card p-1 pe-4 border'
       style={{ opacity: drag ? 0.5 : undefined }}
       onDragStart={() => {
         onDragStart?.();
@@ -45,6 +47,7 @@ const StickyNote = (props: {
         onDragEnd?.();
         setDrag(false);
       }}>
+      <i onClick={() => onDeleteClick?.(id)} className='trash-icon bi bi-trash'></i>
       <Editable
         id={id}
         text={text ?? ''}

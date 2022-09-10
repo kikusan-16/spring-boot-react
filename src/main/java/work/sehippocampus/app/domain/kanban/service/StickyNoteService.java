@@ -11,4 +11,5 @@ public interface StickyNoteService {
 
     StickyNoteEntity upsertStickyNote(StickyNoteForm form);
 
+    void deleteStickyNote(String id);
 }

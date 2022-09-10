@@ -27,8 +27,9 @@ const Column = (props: {
   onStickyNoteDrop?: (entered: string | null) => void
   onAddClick?: () => void
   onStickyNoteChange?: (stickyNoteID: string, text: string) => void
+  onDeleteClick?: (stickyNoteID: string) => void
 }) => {
-  const { type, title, stickyNotes, onStickyNoteDragStart, onStickyNoteDrop, onAddClick, onStickyNoteChange } = props;
+  const { type, title, stickyNotes, onStickyNoteDragStart, onStickyNoteDrop, onAddClick, onStickyNoteChange, onDeleteClick } = props;
   const totalCount = stickyNotes?.length ?? -1;
 
   const handleStickyNoteDragStart = (id: string) => {
@@ -63,6 +64,7 @@ const Column = (props: {
                   text={text}
                   onDragStart={() => handleStickyNoteDragStart(id)}
                   onTextChange={onStickyNoteChange}
+                  onDeleteClick={onDeleteClick}
                 />
               </StickyNote.DropArea>
             ))}

@@ -115,3 +115,14 @@ export const getAddPatch = (
   patch.push(parentNode);
   return patch;
 };
+
+export const getDeletePatch = (
+  nodes: NodeLink[],
+  deleteID: string
+): NodeLink[] => {
+  const patch: NodeLink[] = [];
+  const parentNode = nodes.find(node => node.next === deleteID) as NodeLink;
+  const deletingNode = nodes.find(node => node.id === deleteID) as NodeLink;
+  patch.push({ id: parentNode.id, next: deletingNode.next });
+  return patch;
+};

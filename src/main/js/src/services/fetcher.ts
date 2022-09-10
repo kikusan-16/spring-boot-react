@@ -2,7 +2,7 @@
 
 import { baseUrl } from '../utils/constants';
 
-const wrap = async <T>(task: Promise<Response>): Promise<T> => {
+const wrap = async <T>(task: Promise<Response>): Promise<T | null> => {
   return await new Promise((resolve, reject) => {
     task
       .then(response => {
@@ -12,8 +12,8 @@ const wrap = async <T>(task: Promise<Response>): Promise<T> => {
             .then(json => {
               resolve(json);
             })
-            .catch(error => {
-              reject(error);
+            .catch(() => {
+              resolve(null); // jsonではない場合
             });
         } else {
           reject(response);
@@ -27,10 +27,10 @@ const wrap = async <T>(task: Promise<Response>): Promise<T> => {
 
 export const buildUrl = (path: string) => `${baseUrl}${path}`;
 
-const fetchAny = async <T = any>(
+const fetchAny = async <T>(
   input: RequestInfo,
   init: RequestInit = { headers: new Headers({ 'Content-Type': 'application/json' }) }
-): Promise<T> => {
+): Promise<T | null> => {
   if (typeof input === 'string') {
     return await wrap<T>(fetch(buildUrl(input), init));
   } else {
@@ -38,12 +38,23 @@ const fetchAny = async <T = any>(
   }
 };
 
-export const postAny = async (
+export const postAny = async <T>(
   input: RequestInfo,
   data?: BodyInit
-) => {
+): Promise<T | null> => {
   return await fetchAny(input, {
     method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: data
+  });
+};
+
+export const deleteAny = async (
+  input: RequestInfo,
+  data?: BodyInit
+): Promise<void> => {
+  await fetchAny(input, {
+    method: 'DELETE',
     headers: new Headers({ 'Content-Type': 'application/json' }),
     body: data
   });

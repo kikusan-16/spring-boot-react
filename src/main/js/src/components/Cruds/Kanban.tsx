@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { StickyNoteAttr, NodeLink, ColumnAttr } from '../../utils/types';
-import fetchAny, { postAny } from '../../services/fetcher';
-import { getAddPatch, getReorderPatch, sortBy } from '../../services/kanbanService';
+import fetchAny, { deleteAny, postAny } from '../../services/fetcher';
+import { getAddPatch, getDeletePatch, getReorderPatch, sortBy } from '../../services/kanbanService';
 import Loading from './Loading';
 import Column from './Column';
 
 const getColumns = async (): Promise<ColumnAttr[]> => {
-  return await fetchAny('/api/kanban');
+  return await fetchAny('/api/kanban') ?? [];
 };
 
 const getNodes = async (): Promise<NodeLink[]> => {
-  return await fetchAny('/api/nodes');
+  return await fetchAny('/api/nodes') ?? [];
 };
 
 const getStickyNotes = async (): Promise<NodeLink[]> => {
-  return await fetchAny('/api/stickynotes');
+  return await fetchAny('/api/stickynotes') ?? [];
 };
 
 const postNodes = async (patch: NodeLink[]) => {
   return await postAny('/api/nodes', JSON.stringify(patch));
 };
 
-const postStickyNote = async (stickyNote?: StickyNoteAttr): Promise<StickyNoteAttr> => {
+const postStickyNote = async (stickyNote?: StickyNoteAttr): Promise<StickyNoteAttr | null> => {
   if (stickyNote) {
     return await postAny('/api/stickynotes', JSON.stringify(stickyNote));
   } else {
     return await postAny('/api/stickynotes');
   }
+};
+
+const deleteStickyNote = async (stickyNoteID: string): Promise<void> => {
+  return await deleteAny(`/api/stickynotes/${stickyNoteID}`);
 };
 
 const Kanban = () => {
@@ -79,9 +83,9 @@ const Kanban = () => {
 
     const load = async () => {
       const newStickyNote = await postStickyNote();
+      if (!newStickyNote) return;
 
-      let patch: NodeLink[] = [];
-      patch = getAddPatch(nodes, columnID, newStickyNote.id);
+      const patch = getAddPatch(nodes, columnID, newStickyNote.id);
       stickyNotes.push(newStickyNote);
       const newState = sortBy(columns, stickyNotes, nodes, patch);
 
@@ -106,6 +110,24 @@ const Kanban = () => {
     void load();
   };
 
+  const unlinkStickyNote = (stickyNoteID: string) => {
+    const deletingStickyNote = stickyNotes.find(stickyNote => stickyNote.id === stickyNoteID);
+    if (!deletingStickyNote) return;
+
+    const patch = getDeletePatch(nodes, stickyNoteID);
+
+    const newState = sortBy(columns, stickyNotes, nodes, patch);
+
+    setColumns(newState.columns);
+    setNodes(newState.nodes);
+    setStickyNotes(newState.stickyNotes);
+
+    const load = async () => {
+      await deleteStickyNote(stickyNoteID);
+    };
+    void load();
+  };
+
   return (
     <div className='row'>
           {!columns
@@ -120,6 +142,7 @@ const Kanban = () => {
                 onStickyNoteDrop={(entered: any) => dropStickyNoteTo(entered ?? columnID)}
                 onStickyNoteChange={updateStickyNote}
                 onAddClick={() => addStickyNote(columnID)}
+                onDeleteClick={unlinkStickyNote}
               />
               )))
           }

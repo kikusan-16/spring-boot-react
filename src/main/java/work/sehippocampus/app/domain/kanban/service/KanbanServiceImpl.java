@@ -3,6 +3,7 @@ package work.sehippocampus.app.domain.kanban.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import work.sehippocampus.app.domain.kanban.entity.KanbanEntity;
 import work.sehippocampus.app.domain.kanban.form.KanbanForm;
 import work.sehippocampus.app.domain.kanban.repository.KanbanRepository;
@@ -20,6 +21,7 @@ public class KanbanServiceImpl implements KanbanService {
         return kanbanRepository.findAll();
     }
 
+    @Transactional
     @Override
     public KanbanEntity upsertKanban(KanbanForm form) {
         KanbanEntity entity = modelMapper.map(form, KanbanEntity.class);

@@ -22,7 +22,13 @@ public class StickyNoteController {
     }
 
     @PostMapping
-    public StickyNoteEntity upsert(@RequestBody StickyNoteForm form) {
+    public StickyNoteEntity upsert(@RequestBody(required = false) StickyNoteForm form) {
         return stickyNoteService.upsertStickyNote(form);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteStickyNote(@PathVariable String id) {
+        stickyNoteService.deleteStickyNote(id);
+    }
+
 }
