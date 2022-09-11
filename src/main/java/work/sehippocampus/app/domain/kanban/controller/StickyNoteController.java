@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/stickynotes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class StickyNoteController {
 
     private final StickyNoteService stickyNoteService;

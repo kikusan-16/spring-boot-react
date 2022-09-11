@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/nodes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class NodeLinkController {
     private final NodeLinkService nodeLinkService;
 

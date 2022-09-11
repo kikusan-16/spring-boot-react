@@ -6,6 +6,7 @@ export interface SectionProps {
   index: number
   title: string
   path: string
+  content: React.ReactElement
   note?: string
 }
 

@@ -10,3 +10,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  security:
+    oauth2:
+      client:
+        registration:
+          github: # 任意の登録ID
+            clientId: ${GITHUB_CLIENT_ID} # 環境変数を参照
+            clientSecret: ${GITHUB_CLIENT_SECRET} # 環境変数を参照
