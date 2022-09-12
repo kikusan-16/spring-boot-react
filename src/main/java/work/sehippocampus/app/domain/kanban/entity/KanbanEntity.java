@@ -15,8 +15,8 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class KanbanEntity {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     private String title;
     private Integer lineNumber;

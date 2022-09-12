@@ -1,14 +1,17 @@
-package work.sehippocampus.app.domain.kanban.config;
+package work.sehippocampus.app.domain.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import work.sehippocampus.app.domain.kanban.entity.NodeLinkEntity;
 import work.sehippocampus.app.domain.kanban.entity.KanbanEntity;
+import work.sehippocampus.app.domain.kanban.entity.NodeLinkEntity;
 import work.sehippocampus.app.domain.kanban.entity.StickyNoteEntity;
-import work.sehippocampus.app.domain.kanban.repository.NodeLinkRepository;
 import work.sehippocampus.app.domain.kanban.repository.KanbanRepository;
+import work.sehippocampus.app.domain.kanban.repository.NodeLinkRepository;
 import work.sehippocampus.app.domain.kanban.repository.StickyNoteRepository;
+import work.sehippocampus.app.domain.user.entity.UserEntity;
+import work.sehippocampus.app.domain.user.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +23,8 @@ public class DatabaseLoader implements CommandLineRunner {
     private final KanbanRepository kanbanRepository;
     private final StickyNoteRepository stickyNoteRepository;
     private final NodeLinkRepository nodeLinkRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @Override
     public void run(String... strings) throws Exception {
@@ -50,5 +55,11 @@ public class DatabaseLoader implements CommandLineRunner {
                 new NodeLinkEntity(stickyNotes.get(4).getId(), stickyNotes.get(5).getId()),
                 new NodeLinkEntity(stickyNotes.get(5).getId(), null));
         this.nodeLinkRepository.saveAll(nodes);
+
+        List<UserEntity> users= Arrays.asList(
+                new UserEntity(null, "system", "system@sehippocampus.work", passwordEncoder.encode("password"), "", true),
+                new UserEntity(null, "user", "user@sehippocampus.work", passwordEncoder.encode("password"), "", false)
+                );
+        userRepository.saveAll(users);
     }
 }

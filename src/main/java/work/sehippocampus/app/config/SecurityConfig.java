@@ -2,10 +2,10 @@ package work.sehippocampus.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -21,16 +21,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // フィルター
         http.authorizeRequests(auth -> auth
-                    .antMatchers("/oauth2").authenticated() // 認証必要
+                    .mvcMatchers("/oauth2").authenticated() // 認証必要
+                    .mvcMatchers("/api/user/**").hasRole("USER")
+                    .mvcMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().permitAll()) // 認証不要
-            .exceptionHandling(e -> e
-                    .authenticationEntryPoint(
-                            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) // 認証必要ページで未認証時401を返す
-            .oauth2Login(); // oauth2Login機能を利用する
+
+            .csrf(csrf -> csrf // デフォルトでPOST, PUT, DELETE, PATCHがcsrf有効になる
+                    .disable() // 解除
+                    // .ignoringAntMatchers("/api/**") // pathを指定して解除
+                    // CookieでcsrfTokenを管理 -> XSRF-TOKENを取得, RequestヘッダーにX-XSRF-TOKENとして入力する
+                    // .csrfTokenRepository(new CookieCsrfTokenRepository())
+            )
+            .formLogin() // /loginを有効にする デフォルト設定
+            .and()
+            .logout() // /logoutを有効にする デフォルト設定
+            .and()
+            .oauth2Login(); // oauth2Login機能を利用する -> デフォルト設定とapplication.ymlに設定
 
         http.cors(); // CorsFilterの設定を使用
-
-
 
         return http.build();
     }
@@ -48,4 +56,10 @@ public class SecurityConfig {
 
         return new CorsFilter(configSource);
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }

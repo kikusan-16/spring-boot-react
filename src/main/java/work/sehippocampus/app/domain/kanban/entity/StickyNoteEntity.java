@@ -15,8 +15,8 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class StickyNoteEntity {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     private String text;
 }
