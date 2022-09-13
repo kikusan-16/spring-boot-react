@@ -14,6 +14,9 @@ spring:
     oauth2:
       client:
         registration:
-          github: # 任意の登録ID
-            clientId: ${GITHUB_CLIENT_ID} # 環境変数を参照
-            clientSecret: ${GITHUB_CLIENT_SECRET} # 環境変数を参照
+          github: # 登録ID ${}で環境変数を参照
+            clientId: ${GITHUB_CLIENT_ID}
+            clientSecret: ${GITHUB_CLIENT_SECRET}
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}

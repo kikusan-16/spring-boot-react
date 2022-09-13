@@ -23,7 +23,6 @@ public class SecurityConfig {
         http.authorizeRequests(auth -> auth
                     .mvcMatchers("/oauth2").authenticated() // 認証必要
                     .mvcMatchers("/api/user/**").hasRole("USER")
-                    .mvcMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().permitAll()) // 認証不要
 
             .csrf(csrf -> csrf // デフォルトでPOST, PUT, DELETE, PATCHがcsrf有効になる
