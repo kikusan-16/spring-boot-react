@@ -7,6 +7,7 @@ const wrap = async <T>(task: Promise<Response>): Promise<T | null> => {
     task
       .then(response => {
         if (response.ok) {
+          console.log(response);
           response
             .json()
             .then(json => {

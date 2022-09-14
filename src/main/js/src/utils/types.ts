@@ -7,7 +7,7 @@ export interface SectionProps {
   title: string
   path: string
   content: React.ReactElement
-  note?: string
+  note?: React.ReactElement
 }
 
 export interface MainProps {
