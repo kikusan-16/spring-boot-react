@@ -17,7 +17,10 @@ const wrap = async <T>(task: Promise<Response>): Promise<T | null> => {
               resolve(null); // jsonではない場合
             });
         } else {
-          reject(response);
+          response
+            .json()
+            .then(json => reject(json))
+            .catch(error => reject(error));
         }
       })
       .catch(error => {
@@ -41,11 +44,21 @@ const fetchAny = async <T>(
 
 export const postAny = async <T>(
   input: RequestInfo,
-  data?: BodyInit
+  data?: BodyInit,
+  authentication?: String
 ): Promise<T | null> => {
+  interface Obj {
+    [prop: string]: any
+  }
+  const headers: Obj = {};
+  headers['Content-Type'] = 'application/json';
+  if (authentication) {
+    headers.Authentication = authentication;
+  }
+
   return await fetchAny(input, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
+    headers: new Headers(headers),
     body: data
   });
 };

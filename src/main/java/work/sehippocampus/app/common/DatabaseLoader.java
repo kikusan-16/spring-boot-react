@@ -1,4 +1,4 @@
-package work.sehippocampus.app.domain.common;
+package work.sehippocampus.app.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

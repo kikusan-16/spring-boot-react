@@ -17,7 +17,7 @@ import work.sehippocampus.app.exception.AppException;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-public class AuthResultController {
+public class UserController {
 
     private final ObjectMapper objectMapper;
 

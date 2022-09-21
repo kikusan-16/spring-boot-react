@@ -36,3 +36,27 @@ export interface NodeLink {
   id: string
   next: string | null
 }
+
+export interface Authority {
+  authority: string
+}
+
+export interface LocalUser {
+  id: string
+  token: string
+  name: string
+  email: string
+  bio: string
+  authorities: Authority[]
+  username: string
+}
+
+export interface Login {
+  email: string
+  password: string
+}
+
+export interface Error {
+  status: number
+  message: string
+}

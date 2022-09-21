@@ -1,5 +1,6 @@
 import React from 'react';
-import Auth from '../components/Auth/Auth';
+import JWTAuth from '../components/Auth/JWTAuth';
+import OAuth from '../components/Auth/OAuth';
 import Kanban from '../components/Cruds/Kanban';
 import { SectionProps } from './types';
 
@@ -14,7 +15,7 @@ export const sectionContents: SectionProps[] = [
     index: 2,
     title: 'OAuth2 sample.',
     path: '/oauth2',
-    content: <Auth />,
+    content: <OAuth />,
     note: <>
       <p>if you play oauth, you must set the OAuth Client Setting and application.yml. </p>
       <p>&nbsp;&nbsp;→ see&nbsp;<a href="https://spring.pleiades.io/guides/tutorials/spring-boot-oauth2/">https://spring.pleiades.io/guides/tutorials/spring-boot-oauth2/</a></p>
@@ -22,6 +23,12 @@ export const sectionContents: SectionProps[] = [
       <p><a href="/login">login page</a></p>
       <p><a href="/logout">logout page</a></p>
     </>
+  },
+  {
+    index: 3,
+    title: 'JWT sample.',
+    path: '/jwt',
+    content: <JWTAuth />
   }
   // {
   //   index: 3,

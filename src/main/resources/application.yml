@@ -20,3 +20,8 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+app:
+  jwt:
+    auth:
+      sign-key: signKey012345678901234567890123456789
+      valid-time: 3000000

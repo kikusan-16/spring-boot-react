@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum AppError {
     STICKY_NOTE_NOT_FOUND("sticky note not found", HttpStatus.NOT_FOUND),
     NODE_NOTE_NOT_FOUND("node not found", HttpStatus.NOT_FOUND),
-    ACCOUNT_NOT_FOUNT("account not found", HttpStatus.NOT_FOUND);
+    ACCOUNT_NOT_FOUNT("account not found", HttpStatus.NOT_FOUND),
+    LOGIN_INFO_INVALID("login information is invalid", HttpStatus.UNPROCESSABLE_ENTITY);
 
     private final String message;
     private final HttpStatus status;

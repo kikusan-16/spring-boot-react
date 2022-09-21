@@ -5,7 +5,7 @@ const getUser = async (): Promise<any> => {
   return await fetchAny('/api/user');
 };
 
-const Auth = () => {
+const OAuth = () => {
   const [user, setUser] = useState<any>(undefined);
 
   useEffect(() => {
@@ -26,4 +26,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default OAuth;

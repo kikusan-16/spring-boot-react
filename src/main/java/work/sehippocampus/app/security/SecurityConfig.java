@@ -1,11 +1,13 @@
-package work.sehippocampus.app.config;
+package work.sehippocampus.app.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -16,7 +18,11 @@ import java.util.Arrays;
  * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
  */
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTAuthFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // フィルター
@@ -35,9 +41,11 @@ public class SecurityConfig {
             .and()
             .logout() // /logoutを有効にする デフォルト設定
             .and()
-            .oauth2Login(); // oauth2Login機能を利用する -> デフォルト設定とapplication.ymlに設定
-
-        http.cors(); // CorsFilterの設定を使用
+            .oauth2Login() // oauth2Login機能を利用する -> デフォルト設定とapplication.ymlに設定
+            .and()
+            .cors() // CorsFilterの設定を使用
+            .and()
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // JWT用のフィルタを追加
 
         return http.build();
     }
