@@ -45,20 +45,11 @@ const fetchAny = async <T>(
 export const postAny = async <T>(
   input: RequestInfo,
   data?: BodyInit,
-  authentication?: String
+  headers?: Headers
 ): Promise<T | null> => {
-  interface Obj {
-    [prop: string]: any
-  }
-  const headers: Obj = {};
-  headers['Content-Type'] = 'application/json';
-  if (authentication) {
-    headers.Authentication = authentication;
-  }
-
   return await fetchAny(input, {
     method: 'POST',
-    headers: new Headers(headers),
+    headers: headers ?? new Headers({ 'Content-Type': 'application/json' }),
     body: data
   });
 };

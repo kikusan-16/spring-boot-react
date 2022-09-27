@@ -2,6 +2,7 @@ import React from 'react';
 import JWTAuth from '../components/Auth/JWTAuth';
 import OAuth from '../components/Auth/OAuth';
 import Kanban from '../components/Cruds/Kanban';
+import Video from '../components/Video/Video';
 import { SectionProps } from './types';
 
 export const sectionContents: SectionProps[] = [
@@ -29,33 +30,15 @@ export const sectionContents: SectionProps[] = [
     title: 'JWT sample.',
     path: '/jwt',
     content: <JWTAuth />
+  },
+  {
+    index: 4,
+    title: 'Video sample.',
+    path: '/video',
+    content: <Video />
   }
   // {
-  //   index: 3,
-  //   title: 'One time password sample.',
-  //   path: '/onetimepass',
-  //   note: ''
-  // },
-  // {
-  //   index: 4,
-  //   title: 'Stripe API sample.',
-  //   path: '/stripe',
-  //   note: ''
-  // },
-  // {
   //   index: 5,
-  //   title: 'Streaming sample.',
-  //   path: '/streaming',
-  //   note: ''
-  // },
-  // {
-  //   index: 6,
-  //   title: 'Drag&Drop sample.',
-  //   path: '/dragdrop',
-  //   note: ''
-  // },
-  // {
-  //   index: 7,
   //   title: 'WebSocket sample.',
   //   path: '/websocket',
   //   note: ''

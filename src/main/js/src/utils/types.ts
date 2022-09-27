@@ -60,3 +60,10 @@ export interface Error {
   status: number
   message: string
 }
+
+export interface VideoResponse {
+  id: string
+  name: string
+  type: string
+  data: string
+}

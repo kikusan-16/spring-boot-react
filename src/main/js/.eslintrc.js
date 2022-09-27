@@ -31,5 +31,6 @@ module.exports = {
         'varsIgnorePattern': '_',
       },
     ],
+    'react/no-unknown-property': ['error', { ignore: ['tsx'] }],
   }
 }

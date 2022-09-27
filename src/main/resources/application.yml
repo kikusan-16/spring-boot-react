@@ -20,6 +20,11 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 app:
   jwt:
     auth:

@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum AppError {
+    IO_ERROR("io error", HttpStatus.INTERNAL_SERVER_ERROR),
+    VIDEO_NOT_FOUND("video not found", HttpStatus.NOT_FOUND),
     STICKY_NOTE_NOT_FOUND("sticky note not found", HttpStatus.NOT_FOUND),
     NODE_NOTE_NOT_FOUND("node not found", HttpStatus.NOT_FOUND),
     ACCOUNT_NOT_FOUNT("account not found", HttpStatus.NOT_FOUND),
