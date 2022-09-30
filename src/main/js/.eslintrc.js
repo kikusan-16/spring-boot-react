@@ -22,15 +22,15 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/strict-boolean-expressions': 'off',
     'no-void': ['error', { allowAsStatement: true }],
-    '@typescript-eslint/no-unused-vars': [ 'error',
+    '@typescript-eslint/no-unused-vars': ['error',
       {
-        'vars': 'all',
-        'args': 'after-used',
-        'argsIgnorePattern': '_',
-        'ignoreRestSiblings': false,
-        'varsIgnorePattern': '_',
-      },
+        vars: 'all',
+        args: 'after-used',
+        argsIgnorePattern: '_',
+        ignoreRestSiblings: false,
+        varsIgnorePattern: '_'
+      }
     ],
-    'react/no-unknown-property': ['error', { ignore: ['tsx'] }],
+    'react/no-unknown-property': ['error', { ignore: ['tsx'] }]
   }
 }

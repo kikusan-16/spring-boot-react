@@ -3,6 +3,7 @@ import JWTAuth from '../components/Auth/JWTAuth';
 import OAuth from '../components/Auth/OAuth';
 import Kanban from '../components/Cruds/Kanban';
 import Video from '../components/Video/Video';
+import WebSocketSample from '../components/WebSocket/WebSocket';
 import { SectionProps } from './types';
 
 export const sectionContents: SectionProps[] = [
@@ -36,13 +37,13 @@ export const sectionContents: SectionProps[] = [
     title: 'Video sample.',
     path: '/video',
     content: <Video />
+  },
+  {
+    index: 5,
+    title: 'WebSocket sample.',
+    path: '/websocket',
+    content: <WebSocketSample />
   }
-  // {
-  //   index: 5,
-  //   title: 'WebSocket sample.',
-  //   path: '/websocket',
-  //   note: ''
-  // }
 ];
 Object.freeze(sectionContents);
 
